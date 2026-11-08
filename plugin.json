@@ -1,7 +1,7 @@
 {
   "id": "neodex.gifstickers",
   "name": "GIF & stickers",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "author": "NDesumeur",
   "description": "Ta bibliothèque de GIF animés et d'images : ajoute-les depuis ton PC, un lien ou une page Giphy, ou colle-les, puis copie-les en un clic pour les coller dans Discord, WhatsApp ou un mail, toujours animés. Favoris, récents, collections par mots-clés, recherche et stickers NeoDex fournis, synchronisés entre tes PC.",
   "icon": "icon.png",
