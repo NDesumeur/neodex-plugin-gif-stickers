@@ -1,9 +1,9 @@
 {
   "pluginId": "neodex.gifstickers",
   "repo": "NDesumeur/neodex-plugin-gif-stickers",
-  "version": "1.1.1",
-  "sha256": "801eaedd2d7f58b065d990e5bd23e8477dc2ee83e4b4b3b01fa151a87dc9148d",
-  "approvedAt": "2026-11-06T21:35:47.992Z",
+  "version": "1.1.2",
+  "sha256": "8cb47501893d80540c5c93fc421d63a84eeee8da7d1ac6818f240b02cb19bb03",
+  "approvedAt": "2026-11-08T12:10:48.058Z",
   "neobase": ">=4.0.0",
-  "signature": "X+TKdK8UZI8amLKoye8t2vD2msOM5dTGi3WHd78savi8cldHB/kbLekOELDJcqhNrtNvdTd0VepLTPAnLgumCQ=="
+  "signature": "moMZh61xbPR98oYv4Yq9S4mJGequ3efDfHPHWGpzWESoErnh+e/y50XzHwUq04eCuV9xXs0bME24w76VvmXpBg=="
 }
