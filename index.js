@@ -4,23 +4,24 @@
 const HTML = "";
 /*CSS-MOVED*/ const CSS = `.gfApp{display:flex;background:var(--bg0)}
 .gfApp.drop{box-shadow:inset 0 0 0 4px var(--magenta)}
-.gfSide{width:230px;flex:none;display:flex;flex-direction:column;gap:4px;padding:18px 12px;border-right:3px solid var(--line);background:rgba(var(--d8),.6)}
-.gfColl{all:unset;cursor:var(--cp,pointer);display:flex;justify-content:space-between;padding:8px 10px;color:var(--lilac);font-size:15px}
+.gfSide{width:clamp(170px,15vw,260px);flex:none;box-sizing:border-box;display:flex;flex-direction:column;gap:4px;padding:18px 12px;border-right:3px solid var(--line);background:rgba(var(--d8),.6)}
+.gfColl{all:unset;cursor:var(--cp,pointer);display:flex;justify-content:space-between;gap:8px;padding:8px 10px;color:var(--lilac);font-size:15px}
 .gfColl:hover{background:rgba(255,255,255,.04)}
 .gfColl.on{background:rgba(var(--mgr),.18);color:#fff}
 .gfColl small{color:var(--muted)}
-.gfMain{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px;padding:22px 26px;overflow:hidden}
+.gfMain{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px;padding:clamp(14px,1.6vw,26px);overflow:hidden}
+@media (max-width:760px){.gfApp{flex-direction:column}.gfSide{width:auto;flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:3px solid var(--line);padding:10px}.gfSide>.hint{display:none}}
 .gfMain .row input{flex:1;padding:8px 12px;font-size:15px}
-.gfGrid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));grid-auto-rows:140px;gap:12px;align-content:start;padding:4px}
+.gfGrid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(110px,9vw,190px),1fr));grid-auto-rows:clamp(110px,9vw,190px);gap:12px;align-content:start;padding:4px}
 .gfItem{position:relative;background:var(--win);cursor:var(--cp,pointer);display:grid;place-items:center;overflow:hidden;box-shadow:0 0 0 2px var(--line)}
 .gfItem:hover{box-shadow:0 0 0 3px var(--magenta)}
 .gfItem img{max-width:100%;max-height:100%;object-fit:contain}
 .gfItem img.px8{image-rendering:pixelated;width:70%;height:70%}
-.gfName{position:absolute;left:0;right:0;bottom:0;padding:4px 6px;font-size:12px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.75));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0}
+.gfName{position:absolute;left:0;right:0;bottom:0;padding:4px 6px;font-size:14px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.75));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0}
 .gfItem:hover .gfName{opacity:1}
 .gfTools{position:absolute;top:4px;right:4px;display:none;gap:3px}
 .gfItem:hover .gfTools{display:flex}
-.gfTools button{all:unset;cursor:var(--cp,pointer);width:24px;height:24px;display:grid;place-items:center;background:rgba(0,0,0,.7);color:#fff;font-size:13px}
+.gfTools button{all:unset;cursor:var(--cp,pointer);width:28px;height:28px;display:grid;place-items:center;background:rgba(0,0,0,.7);color:#fff;font-size:13px}
 .gfTools button:hover{background:var(--magenta)}
 .gfTools button.on{color:#ffd07a}
 .gfEmpty{grid-column:1/-1;padding:30px;text-align:center;font-size:16px}
@@ -83,7 +84,7 @@ function gfMount() {
   head.append(el('span', 'label', 'GIF & stickers'), el('span', 'hint', 'Clic : copier (un GIF reste animé quand tu le colles dans Discord, WhatsApp…). Glisse des fichiers ici ou colle une image (Ctrl+V).'));
   const box = el('div', 'gfGrid');
   main.append(head, top, box); v.replaceChildren(side, main); v.classList.add('gfApp');
-  Object.assign(gf, {side, box, q});
+  Object.assign(gf, {side, box});  // pas q : gf.q est le texte cherché
   q.oninput = () => { gf.q = q.value.trim().toLowerCase(); gfRender(); };
   add.onclick = () => fi.click();
   fi.onchange = () => { gfAddFiles([...fi.files]); fi.value = ''; };

@@ -35,3 +35,7 @@ Ta bibliothèque, tes favoris et tes mots-clés sont enregistrés par NeoDex, sa
 Dans NeoDex : **NeoStore → À découvrir → GIF & stickers → Installer**.
 
 Développer un plugin : voir le [SDK NeoDex](https://github.com/NDesumeur/neodex-sdk).
+
+## Taille de l’écran (1.1.3)
+
+Les vignettes et la colonne des collections grandissent ou rétrécissent avec la fenêtre : 6 vignettes par ligne sur un petit portable, plus grandes sur un grand écran. Sous 760 px de large, les collections passent en haut. Corrigé : une bibliothèque vide disait « Rien ne correspond à ta recherche » à l’ouverture au lieu d’expliquer comment ajouter des GIF.

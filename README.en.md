@@ -35,3 +35,7 @@ Your library, favourites and keywords are stored by NeoDex, backed up and synced
 In NeoDex: **NeoStore → Discover → GIF & stickers → Install**.
 
 Building a plugin: see the [NeoDex SDK](https://github.com/NDesumeur/neodex-sdk).
+
+## Screen size (1.1.3)
+
+Thumbnails and the collections column grow or shrink with the window: 6 thumbnails per row on a small laptop, larger on a big screen. Below 760 px wide, collections move to the top. Fixed: an empty library said “Nothing matches your search” on opening instead of explaining how to add GIFs.
