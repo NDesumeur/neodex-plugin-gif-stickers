@@ -4,6 +4,10 @@ Ta bibliothèque de GIF animés et d'images, prête à copier en un clic pour la
 
 *English version: [README.en.md](README.en.md)*
 
+## Ctrl+Alt+G partout (nouveau en 1.2.0)
+
+Ctrl+Alt+G depuis n'importe quelle fenêtre ouvre la bibliothèque, recherche et choix au clavier ; texte façon mème sur les images.
+
 ## Ajouter des images
 
 - **+ Ajouter** : choisis des GIF ou des images sur ton PC.
@@ -25,6 +29,11 @@ La colonne de gauche propose :
 - **Récents** : les 24 dernières images copiées ;
 - **Stickers NeoDex** : les stickers fournis avec NeoDex, prêts à copier ;
 - **Collections** : chaque mot-clé que tu donnes à une image (bouton ✎, mots séparés par des virgules) devient une collection.
+
+## Partout dans Windows, au clavier, mèmes (1.2.0)
+
+- **Ctrl+Alt+G**, depuis n’importe quelle fenêtre, ramène NeoDex avec la bibliothèque ouverte et la recherche prête : tape un mot, **Entrée** copie le premier résultat, ou **↓** puis les flèches pour choisir et **Entrée** pour copier. **Alt+Tab** te ramène dans ta fenêtre pour coller. Le raccourci demande l’autorisation « Raccourcis ».
+- **Aa** sur une image ou un sticker : un texte du haut et un texte du bas, en blanc cerné de noir ; le mème arrive comme nouvelle image dans ta bibliothèque. Les GIF animés n’ont pas ce bouton.
 
 ## Données et synchronisation
 

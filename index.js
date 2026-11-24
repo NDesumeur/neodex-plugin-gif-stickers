@@ -81,11 +81,19 @@ function gfMount() {
   const v = $('gifsApp'), side = el('div', 'gfSide'), main = el('div', 'gfMain'), head = el('div', 'agHead'), q = el('input', 'f'), add = el('button', 'btn main px', '+ AJOUTER'), link = el('button', 'btn px', 'LIEN…'), fi = Object.assign(el('input'), {type: 'file', accept: 'image/gif,image/png,image/webp,image/jpeg', multiple: true, hidden: true});
   q.placeholder = 'Rechercher un GIF ou un sticker'; add.title = 'Ajouter des GIF ou des images de ton PC'; link.title = 'Ajouter depuis un lien (GIF, PNG, page Giphy…)';
   const top = el('div', 'row'); top.append(q, add, link, fi);
-  head.append(el('span', 'label', 'GIF & stickers'), el('span', 'hint', 'Clic : copier (un GIF reste animé quand tu le colles dans Discord, WhatsApp…). Glisse des fichiers ici ou colle une image (Ctrl+V).'));
+  head.append(el('span', 'label', 'GIF & stickers'), el('span', 'hint', 'Clic : copier (un GIF reste animé quand tu le colles dans Discord, WhatsApp…). Glisse des fichiers ici ou colle une image (Ctrl+V). Ctrl+Alt+G : ce sélecteur depuis toute autre fenêtre.'));
   const box = el('div', 'gfGrid');
   main.append(head, top, box); v.replaceChildren(side, main); v.classList.add('gfApp');
   Object.assign(gf, {side, box});  // pas q : gf.q est le texte cherché
   q.oninput = () => { gf.q = q.value.trim().toLowerCase(); gfRender(); };
+  gf.q_ = q;
+  q.onkeydown = e => { const first = gf.box.querySelector('.gfItem'); if (!first) return;
+    if (e.key === 'Enter') { e.preventDefault(); first.click(); } else if (e.key === 'ArrowDown') { e.preventDefault(); first.focus(); } };
+  box.onkeydown = e => { const it = e.target.closest?.('.gfItem'); if (!it) return;
+    const all = [...box.querySelectorAll('.gfItem')], i = all.indexOf(it), cols = Math.max(1, Math.round(box.clientWidth / it.offsetWidth)) || 1;
+    const go = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: cols, ArrowUp: -cols }[e.key];
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); it.click(); }
+    else if (go) { e.preventDefault(); const j = i + go; if (j < 0) q.focus(); else all[Math.min(all.length - 1, j)]?.focus(); } };
   add.onclick = () => fi.click();
   fi.onchange = () => { gfAddFiles([...fi.files]); fi.value = ''; };
   link.onclick = async () => { const u = await ask('Lien du GIF ou de l\'image', '', 'Un lien direct (.gif, .png…) ou une page Giphy'); if (u?.trim()) gfAddUrl(u.trim()); };
@@ -115,7 +123,7 @@ async function gfCopy(it) {
     else if (/\.gif$/i.test(it.file)) await window.neo.clipFile('gifs', it.file);  // as a file: stays animated
     else await window.neo.clipImage('gifs', it.file);
     if (!it.art) { it.uses = (it.uses || 0) + 1; it.t = Date.now(); toolsSave(); }
-    toolCount('gifs'); toast('Copié : colle-le où tu veux (Ctrl+V)'); sfx('notify');
+    toolCount('gifs'); toast(gf.fromKey ? 'Copié : Alt+Tab pour revenir dans ta fenêtre, puis Ctrl+V' : 'Copié : colle-le où tu veux (Ctrl+V)'); sfx('notify'); gf.fromKey = false;
   } catch (e) { toast('Copie impossible : ' + e.message.replace(/^.*Error: /, ''), true); }
 }
 async function gfRender() {
@@ -132,7 +140,7 @@ async function gfRender() {
     img.loading = 'lazy'; img.alt = it.name; img.draggable = false;
     if (it.art) { img.src = pixArt(it.art[0], it.art[1], 8); img.classList.add('px8'); } else window.neo.filesRead('gifs', it.file).then(b64 => { img.src = 'data:' + (/\.png$/i.test(it.file) ? 'image/png' : /\.webp$/i.test(it.file) ? 'image/webp' : /\.jpe?g$/i.test(it.file) ? 'image/jpeg' : 'image/gif') + ';base64,' + b64; }, () => {});
     c.title = it.name + (it.tags?.length ? ' · #' + it.tags.join(' #') : '') + ' · clic : copier';
-    c.onclick = () => gfCopy(it);
+    c.onclick = () => gfCopy(it); c.tabIndex = 0;
     if (!it.art) {
       const fav = el('button', it.fav ? 'on' : '', '★'), ed = el('button', '', '✎'), del = el('button', '', 'X');
       fav.title = 'Favori'; ed.title = 'Nom et mots-clés'; del.title = 'Supprimer (sur tous tes PC)';
@@ -141,9 +149,27 @@ async function gfRender() {
       del.onclick = e => { e.stopPropagation(); tools.gifs.items = tools.gifs.items.filter(x => x !== it); toolsSave(); window.neo.filesRemove('gifs', it.file); gfRender(); };
       tools2.append(fav, ed, del);
     }
+    if (it.art || !/\.gif$/i.test(it.file)) { const mm = el('button', '', 'Aa'); mm.title = 'Ajouter du texte (mème)'; mm.onclick = e => { e.stopPropagation(); gfMeme(it); }; tools2.append(mm); }
     c.append(img, tools2, el('span', 'gfName', it.name));
     return c;
   }) : [el('div', 'hint gfEmpty', gf.q ? 'Rien ne correspond à ta recherche.' : gf.coll === 'all' ? 'Ta bibliothèque est vide : ajoute des GIF de ton PC, colle un lien ou une image, ou pioche dans les stickers NeoDex.' : 'Rien dans cette collection pour l\'instant.')]));
+}
+// le mème : texte blanc cerné de noir en haut et en bas, enregistré comme une nouvelle image de la bibliothèque
+function gfMemeDraw(img, top, bottom) {
+  const k = Math.min(1, 800 / Math.max(img.naturalWidth, img.naturalHeight)), w = Math.max(200, Math.round(img.naturalWidth * k)), h = Math.max(200, Math.round(img.naturalHeight * k)), c = document.createElement('canvas'); c.width = w; c.height = h;
+  const g = c.getContext('2d'); g.imageSmoothingEnabled = !img.src.startsWith('data:image/svg'); g.drawImage(img, 0, 0, w, h);
+  const put = (t, y, base) => { t = t.trim().toUpperCase(); if (!t) return; let size = Math.round(h / 8); g.font = '900 ' + size + 'px Impact, "Arial Black", sans-serif';
+    while (size > 12 && g.measureText(t).width > w * .94) { size -= 2; g.font = '900 ' + size + 'px Impact, "Arial Black", sans-serif'; }
+    g.textAlign = 'center'; g.textBaseline = base; g.lineJoin = 'round'; g.lineWidth = Math.max(3, size / 7); g.strokeStyle = '#000'; g.fillStyle = '#fff'; g.strokeText(t, w / 2, y); g.fillText(t, w / 2, y); };
+  put(top, h * .03, 'top'); put(bottom, h * .97, 'bottom');
+  return c.toDataURL('image/png');
+}
+async function gfMeme(it) {
+  const top = await ask('Texte du haut', ''); if (top == null) return;
+  const bottom = await ask('Texte du bas', ''); if (bottom == null || !(top + bottom).trim()) return;
+  const img = new Image(); img.src = it.art ? await gfPng(it.art) : 'data:image/' + (/\.png$/i.test(it.file) ? 'png' : /\.webp$/i.test(it.file) ? 'webp' : 'jpeg') + ';base64,' + await window.neo.filesRead('gifs', it.file);
+  await img.decode(); const url = gfMemeDraw(img, top, bottom), name = (it.name + ' ' + (top || bottom)).slice(0, 50);
+  if (await gfKeep(window.neo.filesAddData('gifs', name.replace(/[^\w -]+/g, '') + '.png', url.split(',')[1]), name)) { gfRender(); toast('Mème ajouté à ta bibliothèque'); }
 }
 async function gfOpen() {
   await toolsReady(); gfRender(); $('gifsApp').focus({preventScroll: true});
@@ -152,4 +178,6 @@ async function gfOpen() {
 gfMount();  // (non indenté : les textes sur plusieurs lignes restent exactement les tiens)
   // ---- fin ----
   ctx.onOpen(() => { gfOpen(); });
+  ctx.commands.on('pick', async () => { gf.fromKey = true; gf.coll = 'all'; gf.q = ''; if (gf.q_) gf.q_.value = ''; await gfOpen(); gf.q_?.focus(); });
+  view.__gf = { gfMemeDraw, gf };  // pour le test « local »
 }

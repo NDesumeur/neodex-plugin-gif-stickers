@@ -11,5 +11,14 @@ module.exports = async ({ pj, sleep }) => {
   const found = await pj(`document.querySelectorAll('.gfItem').length`);
   if (found < 1) throw new Error('recherche « coeur » : rien');
   await pj(`(() => { const q = document.querySelector('.gfMain .row input'); q.value = ''; q.dispatchEvent(new Event('input')); })(), 0`); await sleep(300);
-  return r.n + ' stickers, ' + r.perRow + ' par ligne (' + r.size + ' px), recherche ok';
+  // au clavier : flèche bas depuis la recherche, puis flèche droite ; le mème dessine le texte sur l'image
+  const k = await pj(`(async () => { const q = document.querySelector('.gfMain .row input'), key = (t, k) => t.dispatchEvent(new KeyboardEvent('keydown', {key: k, bubbles: true}));
+    key(q, 'ArrowDown'); const all = [...document.querySelectorAll('.gfItem')], a = all.indexOf(document.activeElement); key(document.activeElement, 'ArrowRight'); const b = all.indexOf(document.activeElement);
+    const G = document.querySelector('.gfGrid').closest('.gfApp').__gf || document.querySelector('.gfGrid').closest('.appWrap, .gfApp').parentNode.__gf, img = document.querySelector('.gfItem img'); await img.decode();
+    const url = G.gfMemeDraw(img, 'haut', 'bas'), im = new Image(); im.src = url; await im.decode();
+    const c = document.createElement('canvas'); c.width = im.width; c.height = im.height; const g = c.getContext('2d'); g.drawImage(im, 0, 0); const d = g.getImageData(0, 0, c.width, Math.round(c.height * .14)).data; let white = 0; for (let i = 0; i < d.length; i += 4) white += d[i] > 240 && d[i + 1] > 240 && d[i + 2] > 240;
+    return {a, b, w: im.width, white, aa: document.querySelectorAll('.gfTools button').length}; })()`);
+  if (k.a !== 0 || k.b !== 1) throw new Error('clavier : ' + JSON.stringify(k));
+  if (k.white < 200) throw new Error('mème sans texte : ' + JSON.stringify(k));
+  return 'clavier, mème (' + k.white + ' px de texte) · ' + r.n + ' stickers, ' + r.perRow + ' par ligne (' + r.size + ' px), recherche ok';
 };

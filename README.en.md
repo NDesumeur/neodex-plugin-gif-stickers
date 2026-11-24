@@ -4,6 +4,10 @@ Your library of animated GIFs and images, ready to copy in one click and paste i
 
 *Version française : [README.md](README.md)*
 
+## Ctrl+Alt+G anywhere (new in 1.2.0)
+
+Ctrl+Alt+G from any window opens the library, search and pick with the keyboard; meme-style text on images.
+
 ## Adding images
 
 - **+ Add**: choose GIFs or images on your PC.
@@ -25,6 +29,11 @@ The left column offers:
 - **Recent**: the last 24 images copied;
 - **NeoDex stickers**: the stickers that come with NeoDex, ready to copy;
 - **Collections**: each keyword you give an image (✎ button, words separated by commas) becomes a collection.
+
+## Anywhere in Windows, keyboard, memes (1.2.0)
+
+- **Ctrl+Alt+G**, from any window, brings NeoDex back with the library open and the search ready: type a word, **Enter** copies the first result, or **↓** then the arrows to choose and **Enter** to copy. **Alt+Tab** takes you back to your window to paste. The shortcut asks for the « Shortcuts » permission.
+- **Aa** on an image or a sticker: a top text and a bottom text, white with a black outline; the meme arrives as a new image in your library. Animated GIFs don't have this button.
 
 ## Data and sync
 
